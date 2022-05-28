@@ -23,18 +23,14 @@ message Artist {
 
 service SongArtistService {
   // unary synchronous
-  // client will send one request and author will respond with one response
-  rpc getSinger(Artist) returns(Artist) {}
+  rpc getArtist(Artist) returns(Artist) {}
 
   // client - streaming - asynchronous
-  // client will send stream of messages and server will respond with one response
   rpc getLatestSong(stream Song) returns(Song) {}
 
   // server - streaming - asynchronous
-  // client will send one request and server will respond with stream of messages
-  rpc getSongsBySinger(Artist) returns (stream Song) {}
+  rpc getSongsByArtist(Artist) returns (stream Song) {}
 
   // bidirectional - streaming - asynchronous
-  // Client will send stream of messages and server will respond back with stream of messages
-  rpc getSongBySingerGender(stream Song) returns (stream Song) {}
+  rpc getSongByArtistGender(stream Song) returns (stream Song) {}
 }
