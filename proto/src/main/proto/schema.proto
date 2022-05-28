@@ -2,16 +2,18 @@ syntax = "proto3";
 package com.kajal;
 option java_multiple_files=true;
 
+// Song class definition
 message Song {
   int32 song_id = 1;
-  int32 singer_id = 2;
+  int32 artist_id = 2;
   int32 year = 3;
   string album = 4;
-  string title = 5;
+  string song_name = 5;
 }
 
-message Singer {
-  int32 singer_id = 1;
+// Artist class definition
+message Artist {
+  int32 artist_id = 1;
   string first_name = 2;
   string last_name = 3;
   string gender = 4;
@@ -19,10 +21,10 @@ message Singer {
 }
 
 
-service SongSingerService {
+service SongArtistService {
   // unary synchronous
   // client will send one request and author will respond with one response
-  rpc getSinger(Singer) returns(Singer) {}
+  rpc getSinger(Artist) returns(Artist) {}
 
   // client - streaming - asynchronous
   // client will send stream of messages and server will respond with one response
@@ -30,7 +32,7 @@ service SongSingerService {
 
   // server - streaming - asynchronous
   // client will send one request and server will respond with stream of messages
-  rpc getSongsBySinger(Singer) returns (stream Song) {}
+  rpc getSongsBySinger(Artist) returns (stream Song) {}
 
   // bidirectional - streaming - asynchronous
   // Client will send stream of messages and server will respond back with stream of messages
