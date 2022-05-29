@@ -13,8 +13,8 @@ public class SongArtistServerService extends SongArtistServiceGrpc.SongArtistSer
     public void getArtist(Artist request, StreamObserver<Artist> responseObserver) {
         TempDb.getArtistsFromTempDb().
                 stream().
-                filter(artist -> artist.getArtistId()==request.getArtistId()).
-                findFirst().ifPresent(responseObserver::onNext);
+                filter(artist -> artist.getArtistId()==request.getArtistId()).//filtering it with author id got from request
+                findFirst().ifPresent(responseObserver::onNext); // send the response back to the client
         responseObserver.onCompleted();
     }
 

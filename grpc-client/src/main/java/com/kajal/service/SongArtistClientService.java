@@ -16,15 +16,17 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class SongArtistClientService {
+
+    // create a synchronous client as a blocking stub to make call
     @GrpcClient("grpc-service")
-    SongArtistClientService.SongArtistServiceBlockingStub synchronousClient;
+    SongArtistServiceGrpc.SongArtistServiceBlockingStub synchronousClient;
 
     @GrpcClient("grpc-service")
     SongArtistServiceGrpc.SongArtistServiceStub asynchronousClient;
 
     public Map<Descriptors.FieldDescriptor, Object> getArtist(int artistId) {
         Artist artistRequest = Artist.newBuilder().setArtistId(artistId).build();
-        Artist artistResponse = synchronousClient.getArtist(artistRequest);
+        Artist artistResponse = synchronousClient.getArtist(artistRequest); // making inter-service communication call to the server using synchronous client
         return artistResponse.getAllFields();
     }
 
