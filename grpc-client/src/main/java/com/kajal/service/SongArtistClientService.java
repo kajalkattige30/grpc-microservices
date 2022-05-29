@@ -32,6 +32,7 @@ public class SongArtistClientService {
 
     public List<Map<Descriptors.FieldDescriptor, Object>> getSongsByArtist(int artistId) throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
+        // creating a new artist object
         Artist artistRequest = Artist.newBuilder().setArtistId(artistId).build();
         final List<Map<Descriptors.FieldDescriptor, Object>> response = new ArrayList<>();
         asynchronousClient.getSongsByArtist(artistRequest, new StreamObserver<Song>() {
@@ -73,6 +74,7 @@ public class SongArtistClientService {
                 countDownLatch.countDown();
             }
         });
+        // client is streaming multiple songs to the server
         TempDb.getSongsFromTempDb().forEach(responseObserver::onNext);
         responseObserver.onCompleted();
         boolean await = countDownLatch.await(1, TimeUnit.MINUTES);

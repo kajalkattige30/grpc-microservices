@@ -23,7 +23,7 @@ public class SongArtistServerService extends SongArtistServiceGrpc.SongArtistSer
         TempDb.getSongsFromTempDb()
                 .stream()
                 .filter(song -> song.getArtistId() == request.getArtistId())
-                .forEach(responseObserver::onNext);
+                .forEach(responseObserver::onNext); //streaming each song to the client
         responseObserver.onCompleted();
     }
 
