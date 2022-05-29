@@ -2,9 +2,9 @@ package com.kajal.service;
 
 import com.google.protobuf.Descriptors;
 import com.google.rpc.context.AttributeContext;
-import com.kajal.Singer;
+import com.kajal.Artist;
 import com.kajal.Song;
-import com.kajal.SongSingerServiceGrpc;
+import com.kajal.SongArtistServiceGrpc;
 import com.kajal.TempDb;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -15,24 +15,24 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class SongSingerClientService {
+public class SongArtistClientService {
     @GrpcClient("grpc-service")
-    SongSingerServiceGrpc.SongSingerServiceBlockingStub synchronousClient;
+    SongArtistClientService.SongArtistServiceBlockingStub synchronousClient;
 
     @GrpcClient("grpc-service")
-    SongSingerServiceGrpc.SongSingerServiceStub asynchronousClient;
+    SongArtistServiceGrpc.SongArtistServiceStub asynchronousClient;
 
-    public Map<Descriptors.FieldDescriptor, Object> getSinger(int singerId) {
-        Singer singerRequest = Singer.newBuilder().setSingerId(singerId).build();
-        Singer singerResponse = synchronousClient.getSinger(singerRequest);
-        return singerResponse.getAllFields();
+    public Map<Descriptors.FieldDescriptor, Object> getArtist(int artistId) {
+        Artist artistRequest = Artist.newBuilder().setArtistId(artistId).build();
+        Artist artistResponse = synchronousClient.getArtist(artistRequest);
+        return artistResponse.getAllFields();
     }
 
-    public List<Map<Descriptors.FieldDescriptor, Object>> getSongsBySinger(int singerId) throws InterruptedException {
+    public List<Map<Descriptors.FieldDescriptor, Object>> getSongsByArtist(int artistId) throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        Singer singerRequest = Singer.newBuilder().setSingerId(singerId).build();
+        Artist artistRequest = Artist.newBuilder().setArtistId(artistId).build();
         final List<Map<Descriptors.FieldDescriptor, Object>> response = new ArrayList<>();
-        asynchronousClient.getSongsBySinger(singerRequest, new StreamObserver<Song>() {
+        asynchronousClient.getSongsByArtist(artistRequest, new StreamObserver<Song>() {
             @Override
             public void onNext(Song song) {
                 response.add(song.getAllFields());
@@ -77,10 +77,10 @@ public class SongSingerClientService {
         return await ? response : Collections.emptyMap();
     }
 
-    public List<Map<Descriptors.FieldDescriptor, Object>> getSongsBySingerGender(String gender) throws InterruptedException {
+    public List<Map<Descriptors.FieldDescriptor, Object>> getSongsByArtistGender(String gender) throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         final List<Map<Descriptors.FieldDescriptor, Object>> response = new ArrayList<>();
-        StreamObserver<Song> responseObserver = asynchronousClient.getSongBySingerGender(new StreamObserver<Song>() {
+        StreamObserver<Song> responseObserver = asynchronousClient.getSongByArtistGender(new StreamObserver<Song>() {
             @Override
             public void onNext(Song song) {
                 response.add(song.getAllFields());
@@ -96,10 +96,10 @@ public class SongSingerClientService {
                 countDownLatch.countDown();
             }
         });
-        TempDb.getSingersFromTempDb()
+        TempDb.getArtistsFromTempDb()
                 .stream()
-                .filter(singer -> singer.getGender().equalsIgnoreCase(gender))
-                .forEach(singer -> responseObserver.onNext(Song.newBuilder().setSingerId(singer.getSingerId()).build()));
+                .filter(artist -> artist.getGender().equalsIgnoreCase(gender))
+                .forEach(artist -> responseObserver.onNext(Song.newBuilder().setArtistId(artist.getArtistId()).build()));
                 responseObserver.onCompleted();
         boolean await = countDownLatch.await(1, TimeUnit.MINUTES);
         return await ? response : Collections.emptyList();

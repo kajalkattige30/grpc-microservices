@@ -6,22 +6,23 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import java.util.ArrayList;
 import java.util.List;
 
+// annotate with grpc service
 @GrpcService
-public class SongSingerServerService extends SongSingerServiceGrpc.SongSingerServiceImplBase{
+public class SongArtistServerService extends SongArtistServiceGrpc.SongArtistServiceImplBase{
     @Override
-    public void getSinger(Singer request, StreamObserver<Singer> responseObserver) {
-        TempDb.getSingersFromTempDb().
+    public void getArtist(Artist request, StreamObserver<Artist> responseObserver) {
+        TempDb.getArtistsFromTempDb().
                 stream().
-                filter(singer -> singer.getSingerId()==request.getSingerId()).
+                filter(artist -> artist.getArtistId()==request.getArtistId()).
                 findFirst().ifPresent(responseObserver::onNext);
         responseObserver.onCompleted();
     }
 
     @Override
-    public void getSongsBySinger(Singer request, StreamObserver<Song> responseObserver) {
+    public void getSongsByArtist(Artist request, StreamObserver<Song> responseObserver) {
         TempDb.getSongsFromTempDb()
                 .stream()
-                .filter(song -> song.getSingerId() == request.getSingerId())
+                .filter(song -> song.getArtistId() == request.getArtistId())
                 .forEach(responseObserver::onNext);
         responseObserver.onCompleted();
     }
@@ -53,14 +54,14 @@ public class SongSingerServerService extends SongSingerServiceGrpc.SongSingerSer
     }
 
     @Override
-    public StreamObserver<Song> getSongBySingerGender(StreamObserver<Song> responseObserver) {
+    public StreamObserver<Song> getSongByArtistGender(StreamObserver<Song> responseObserver) {
         return new StreamObserver<Song>() {
             List<Song> songList = new ArrayList<>();
             @Override
             public void onNext(Song song) {
                 TempDb.getSongsFromTempDb()
                         .stream()
-                        .filter(songsFromDb -> song.getSingerId() == songsFromDb.getSingerId())
+                        .filter(songsFromDb -> song.getArtistId() == songsFromDb.getArtistId())
                         .forEach(songList::add);
             }
 
