@@ -9,7 +9,7 @@ There are three modules created in this project:
 1. Proto: contains all the proto files(Schemas)
 2. grpc-server : This is the server module which contains the server application and its implementation. Client microservice makes remote procedure calls to this microservice.
 
-3. grpc-client: This is the client module which contains a controller file where in some APIs are exposed. These APIs make use of auto-generated services which internally do the inter-service communication and invoke methods in the server microservice.
+3. grpc-client: This is the client module which contains a controller file where in some APIs are exposed. These APIs make use of auto-generated services which internally do the inter-service communication and invoke methods in the server microservice. It also contains a service file which has the client implementation. 
 
 Steps to run the project:
 
