@@ -2,7 +2,7 @@
 
 gRPC is a modern communication framework which was introduced in 2015. The protocol buffers in the proto file act as a form of contract for communication. The proto file is a schema for the data that is being sent across the microservices. It helps define things like the fields that are required, fields that are optional as well as the object types for these fields. The proto file also defines the procedures that are expected to be exposed, essentially defining what procedures are callable remotely from other microservices. gRPC also provides great performance benefits with HTTP 2.0 as protocol buffers are serialized and sent as binaries across the wire. In traditional REST API, where the de facto message type is JSON, they are not compressed or flat by any means considering that they are key-value pairs that certainly are not the most space efficient. With the protocol buffers, messages are sent as binaries which are significantly smaller than the normal JSON messages. This makes gRPC fast and efficient.
 
-This work implements grpc using a spring boot application. It implements 4 types of grpc - unary, server streaming, client streaming and bidirectional streaming on a database file containing lists of songs and artists.
+This work implements gRPC across the microservices using a spring boot application. It implements 4 types of gRPC - unary, server streaming, client streaming and bidirectional streaming on a database file containing lists of songs and artists.
 
 There are three modules created in this project:
 
